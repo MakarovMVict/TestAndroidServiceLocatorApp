@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="payments_title">Платежи</string>
+    <string name="payments_subtitle">История и новые платежи</string>
+    <string name="payments_pending_count">Ожидают: %d</string>
+    <string name="payments_clear_pending">Отметить обработанными</string>
+</resources>

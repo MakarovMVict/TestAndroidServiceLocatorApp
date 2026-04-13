@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Настройки</string>
+    <string name="settings_subtitle">Параметры приложения</string>
+    <string name="settings_notifications">Уведомления</string>
+    <string name="settings_main_visit_count">Показов главного экрана: %d</string>
+    <string name="settings_button_parameters">Параметры</string>
+    <string name="parameters_screen_title">Параметры</string>
+    <string name="parameters_screen_subtitle">Дополнительные параметры приложения</string>
+    <string name="parameters_detail_level">Уровень детализации: %s</string>
+    <string name="parameters_back">Назад</string>
+</resources>

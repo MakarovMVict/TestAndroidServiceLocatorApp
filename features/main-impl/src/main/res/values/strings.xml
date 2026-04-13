@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_title">Главная</string>
+    <string name="home_subtitle">Добро пожаловать</string>
+    <string name="home_visit_count">Показов экрана: %d</string>
+</resources>
