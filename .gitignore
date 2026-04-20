@@ -1,0 +1,39 @@
+.DS_Store
+Thumbs.db
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Gradle
+.gradle/
+build/
+**/build/
+local.properties
+
+# Kotlin / Java
+*.class
+out/
+
+# Android
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+
+# NDK / CMake
+obj/
+.libs/
+
+# Logs
+*.log
+
+# Keystores / secrets
+*.jks
+*.keystore
+keystore.properties
+**/google-services.json
+**/secrets.properties

@@ -23,7 +23,10 @@ object FeatureServiceLocator : FeatureFactoriesLocator {
         }
     }
 
-    override fun removeFactory(key: String) {
-        factories.get(key)?.removeComponent(key)
+    override fun removeFactory(key: String, hardRemove: Boolean) {
+        factories.get(key)?.removeComponent(featureKey = key, hardRemove = hardRemove)
+        if (hardRemove) {
+            factories.remove(key)
+        }
     }
 }

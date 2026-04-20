@@ -5,6 +5,7 @@ import com.example.testapppattern.core.di.feature.FeatureFactoriesLocator
 import com.example.testapppattern.feature.main.api.MainFeatureDependencies
 import com.example.testapppattern.core.di.feature.IFeatureComponentFactory
 import java.lang.ref.WeakReference
+import java.util.concurrent.atomic.AtomicInteger
 
 class MainIFeatureComponentFactory(
     private val appContext: Context,
@@ -16,7 +17,7 @@ class MainIFeatureComponentFactory(
 
     private var weakComponentRef: WeakReference<MainFeatureDependencies>? = null
 
-    private var usageCount: Int = 0
+    private val usageCount = AtomicInteger(0)
 
     private var strongComponentRef = weakComponentRef?.get()
 
@@ -26,7 +27,7 @@ class MainIFeatureComponentFactory(
             featureServiceLocator.getFactory(key).getComponent()
         }
 
-        usageCount++
+        usageCount.incrementAndGet()
 
         if (weakComponentRef?.get() == null) {
             val component = DaggerMainFeatureGraph.builder()
@@ -41,19 +42,21 @@ class MainIFeatureComponentFactory(
         return strongComponentRef!!
     }
 
-    override fun removeComponent(featureKey: String) {
+    override fun removeComponent(featureKey: String, hardRemove: Boolean) {
         require(featureKey == this.featureKey) {
             "Expected featureKey=$this.featureKey, got $featureKey"
         }
 
         for (key in dependenciesKeysList) {
-            featureServiceLocator.removeFactory(key)
+            featureServiceLocator.removeFactory(key = key, hardRemove = hardRemove)
         }
 
-        usageCount--
-        if (usageCount <= 0) {
+        if (usageCount.decrementAndGet() <= 0) {
             strongComponentRef = null
-            usageCount = 0
+            if (hardRemove) {
+                weakComponentRef?.clear()
+            }
+            usageCount.set(0)
         }
     }
 }

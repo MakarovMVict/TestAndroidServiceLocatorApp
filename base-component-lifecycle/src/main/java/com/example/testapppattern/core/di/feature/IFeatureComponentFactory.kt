@@ -8,5 +8,5 @@ interface IFeatureComponentFactory<T> {
     fun getComponent(): T
 
     /** Удаление/освобождение компонента фичи; [featureKey] — ключ удаляемой фичи. */
-    fun removeComponent(featureKey: String)
+    fun removeComponent(featureKey: String, hardRemove: Boolean)
 }

@@ -14,7 +14,7 @@ class SettingsGraphHolderViewModel : ViewModel() {
     }
 
     override fun onCleared() {
-        FeatureServiceLocator.removeFactory(FeatureKeys.SETTINGS)
+        FeatureServiceLocator.removeFactory(key = FeatureKeys.SETTINGS, hardRemove = false)
         super.onCleared()
     }
 }

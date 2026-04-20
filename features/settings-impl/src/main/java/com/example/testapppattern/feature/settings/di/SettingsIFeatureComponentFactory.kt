@@ -6,6 +6,7 @@ import com.example.testapppattern.core.di.feature.FeatureKeys
 import com.example.testapppattern.core.di.feature.IFeatureComponentFactory
 import com.example.testapppattern.feature.main.api.MainFeatureDependencies
 import java.lang.ref.WeakReference
+import java.util.concurrent.atomic.AtomicInteger
 
 class SettingsIFeatureComponentFactory(
     private val featureKey: String,
@@ -19,13 +20,14 @@ class SettingsIFeatureComponentFactory(
 
     private var strongComponentRef: SettingsFeatureComponent? = null
 
-    private var usageCount: Int = 0
+    private val usageCount = AtomicInteger(0)
 
     override fun getComponent(): SettingsFeatureComponent {
         val mainDependencies =
-            featureServiceLocator.getFactory(FeatureKeys.MAIN).getComponent() as MainFeatureDependencies
+            featureServiceLocator.getFactory(FeatureKeys.MAIN)
+                .getComponent() as MainFeatureDependencies
 
-        usageCount++
+        usageCount.incrementAndGet()
 
         if (weakComponentRef?.get() == null) {
             val component = DaggerSettingsFeatureComponent.builder()
@@ -41,19 +43,21 @@ class SettingsIFeatureComponentFactory(
         return strongComponentRef!!
     }
 
-    override fun removeComponent(featureKey: String) {
+    override fun removeComponent(featureKey: String, hardRemove: Boolean) {
         require(featureKey == this.featureKey) {
             "Expected featureKey=$this.featureKey, got $featureKey"
         }
 
         for (key in dependenciesKeysList) {
-            featureServiceLocator.removeFactory(key)
+            featureServiceLocator.removeFactory(key = key, hardRemove = hardRemove)
         }
 
-        usageCount--
-        if (usageCount <= 0) {
+        if (usageCount.decrementAndGet() <= 0) {
             strongComponentRef = null
-            usageCount = 0
+            if (hardRemove) {
+                weakComponentRef?.clear()
+            }
+            usageCount.set(0)
         }
     }
 }
