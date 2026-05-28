@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testapppattern.feature.main.domain.usecase.GetMainScreenViewsCountUseCase
 import com.example.testapppattern.feature.main.domain.usecase.RecordMainScreenViewUseCase
+import com.example.testapppattern.feature.settings.domain.usecase.GetSettingsDetailLevelUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,11 +14,13 @@ import javax.inject.Inject
 
 data class HomeUiState(
     val visitCount: Int = 0,
+    val settingsDetailLevel: String = "",
 )
 
 class HomeViewModel @Inject constructor(
     private val getMainScreenViewsCountUseCase: GetMainScreenViewsCountUseCase,
     private val recordMainScreenViewUseCase: RecordMainScreenViewUseCase,
+    private val getSettingsDetailLevelUseCase: GetSettingsDetailLevelUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -25,9 +28,12 @@ class HomeViewModel @Inject constructor(
 
     fun onScreenShown() {
         viewModelScope.launch {
+            val detailLevel = getSettingsDetailLevelUseCase()
             // Состояние всегда берём из репозитория через use-case.
             val current = getMainScreenViewsCountUseCase()
-            _uiState.update { it.copy(visitCount = current) }
+            _uiState.update {
+                it.copy(visitCount = current, settingsDetailLevel = detailLevel)
+            }
 
             // Затем фиксируем очередной показ главного экрана.
             recordMainScreenViewUseCase()

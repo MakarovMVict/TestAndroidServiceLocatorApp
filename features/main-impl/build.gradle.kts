@@ -27,6 +27,7 @@ android {
 
 dependencies {
     implementation(project(":features:main-api"))
+    implementation(project(":features:settings-api"))
     implementation(project(":core:core-di"))
     implementation(project(":base-component-lifecycle"))
     implementation(project(":core:core-ui"))

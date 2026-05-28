@@ -3,4 +3,5 @@
     <string name="home_title">Главная</string>
     <string name="home_subtitle">Добро пожаловать</string>
     <string name="home_visit_count">Показов экрана: %d</string>
+    <string name="home_settings_detail_level">Уровень детализации (settings): %s</string>
 </resources>

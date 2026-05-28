@@ -32,6 +32,7 @@ class MainIFeatureComponentFactory(
         if (weakComponentRef?.get() == null) {
             val component = DaggerMainFeatureGraph.builder()
                 .applicationContext(appContext)
+                .featureFactoriesLocator(featureServiceLocator)
                 .build()
 
             weakComponentRef = WeakReference(component)

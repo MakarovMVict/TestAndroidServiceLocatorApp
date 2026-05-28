@@ -61,5 +61,12 @@ internal fun HomeScreen(
             modifier = Modifier.padding(top = 16.dp),
             textAlign = TextAlign.Center,
         )
+        Text(
+            text = stringResource(R.string.home_settings_detail_level, uiState.settingsDetailLevel),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.padding(top = 8.dp),
+            textAlign = TextAlign.Center,
+        )
     }
 }
