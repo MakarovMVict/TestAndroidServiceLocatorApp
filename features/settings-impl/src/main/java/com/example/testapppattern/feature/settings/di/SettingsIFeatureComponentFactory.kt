@@ -27,6 +27,10 @@ class SettingsIFeatureComponentFactory(
             featureServiceLocator.getFactory(FeatureKeys.MAIN)
                 .getComponent() as MainFeatureDependencies
 
+        for (key in dependenciesKeysList) {
+            featureServiceLocator.getFactory(key = key, hardRemove = hardRemove)
+        }
+
         usageCount.incrementAndGet()
 
         if (weakComponentRef?.get() == null) {
