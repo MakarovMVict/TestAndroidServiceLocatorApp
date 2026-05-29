@@ -1,21 +1,40 @@
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+*.tmp
+
+# General logs / temp files
+*.log
+*.pid
+*.seed
+*.out
+*.err
+*.stackdump
 
 # IntelliJ / Android Studio
 .idea/
 *.iml
 *.ipr
 *.iws
+.kotlin/
+/.fleet/
 
 # Gradle
 .gradle/
 build/
 **/build/
 local.properties
+gradle-app.setting
+!gradle/wrapper/gradle-wrapper.jar
 
 # Kotlin / Java
 *.class
 out/
+*.kotlin_module
 
 # Android
 captures/
@@ -23,13 +42,21 @@ captures/
 .cxx/
 *.apk
 *.aab
+*.ap_
+*.dex
 
 # NDK / CMake
 obj/
 .libs/
+cmake-build-*/
 
-# Logs
-*.log
+# Test / coverage reports
+*.hprof
+*.ec
+*.exec
+coverage/
+test-output/
+reports/
 
 # Keystores / secrets
 *.jks
@@ -37,3 +64,27 @@ obj/
 keystore.properties
 **/google-services.json
 **/secrets.properties
+*.pem
+*.p12
+*.key
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# AI / agent tooling artifacts (local-only)
+.cursor/
+.cursor-cache/
+.aider*
+.aider/
+.claude/
+.gemini/
+.copilot/
+.codeium/
+.windsurf/
+.continue/
+.llm/
+prompts.local/
+*.promptlog
+*.llmtrace
