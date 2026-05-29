@@ -88,3 +88,7 @@ keystore.properties
 prompts.local/
 *.promptlog
 *.llmtrace
+
+# Local cache/index artifacts
+*.bin
+*.lock

@@ -2,62 +2,80 @@ package com.example.testapppattern.feature.main.di
 
 import android.content.Context
 import com.example.testapppattern.core.di.feature.FeatureFactoriesLocator
+import com.example.testapppattern.core.di.feature.FeatureInstanceOwnerKey
+import com.example.testapppattern.core.di.feature.FeatureKey
 import com.example.testapppattern.feature.main.api.MainFeatureDependencies
 import com.example.testapppattern.core.di.feature.IFeatureComponentFactory
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.ConcurrentHashMap
 
 class MainIFeatureComponentFactory(
     private val appContext: Context,
-    private val featureKey: String,
+    private val featureKey: FeatureKey,
     private val featureServiceLocator: FeatureFactoriesLocator
 ) : IFeatureComponentFactory<MainFeatureDependencies> {
 
-    override val dependenciesKeysList: List<String> = emptyList()
+    override val dependenciesKeysList: Set<FeatureKey> =
+        ConcurrentHashMap.newKeySet<FeatureKey>().apply { add(FeatureKey.SETTINGS) }
+    private val featureOwners: MutableSet<FeatureInstanceOwnerKey> = ConcurrentHashMap.newKeySet()
 
     private var weakComponentRef: WeakReference<MainFeatureDependencies>? = null
 
-    private val usageCount = AtomicInteger(0)
+    private var strongComponentRef: MainFeatureDependencies? = null
 
-    private var strongComponentRef = weakComponentRef?.get()
-
-    override fun getComponent(): MainFeatureDependencies {
-
-        for (key in dependenciesKeysList) {
-            featureServiceLocator.getFactory(key).getComponent()
+    override fun getComponent(ownerKey: FeatureInstanceOwnerKey): MainFeatureDependencies {
+        if (featureOwners.contains(ownerKey).not()) {
+            featureOwners.add(ownerKey)
         }
 
-        usageCount.incrementAndGet()
+        strongComponentRef?.let {
+            return it
+        }
+        weakComponentRef?.get()?.let { cached ->
+            strongComponentRef = cached
+            return cached
+        }
+
+        val builtComponent = DaggerMainFeatureGraph.builder()
+            .applicationContext(appContext)
+            .featureFactoriesLocator(featureServiceLocator)
+            .featureOwnerKey(ownerKey)
+            .build()
 
         if (weakComponentRef?.get() == null) {
-            val component = DaggerMainFeatureGraph.builder()
-                .applicationContext(appContext)
-                .featureFactoriesLocator(featureServiceLocator)
-                .build()
-
-            weakComponentRef = WeakReference(component)
+            weakComponentRef = WeakReference(builtComponent)
         }
-
-        strongComponentRef = weakComponentRef?.get()
-
+        strongComponentRef = weakComponentRef?.get() ?: builtComponent
         return strongComponentRef!!
     }
 
-    override fun removeComponent(featureKey: String, hardRemove: Boolean) {
+    override fun removeComponent(
+        featureKey: FeatureKey,
+        ownerKey: FeatureInstanceOwnerKey,
+        hardRemove: Boolean
+    ) {
         require(featureKey == this.featureKey) {
             "Expected featureKey=$this.featureKey, got $featureKey"
         }
 
-        for (key in dependenciesKeysList) {
-            featureServiceLocator.removeFactory(key = key, hardRemove = hardRemove)
+        if (featureOwners.remove(ownerKey).not()) {
+            return
         }
-
-        if (usageCount.decrementAndGet() <= 0) {
+        val dependencies = dependenciesKeysList.toList()
+        val shouldClear = featureOwners.isEmpty()
+        if (shouldClear) {
             strongComponentRef = null
             if (hardRemove) {
                 weakComponentRef?.clear()
             }
-            usageCount.set(0)
+        }
+
+        for (key in dependencies) {
+            featureServiceLocator.removeFactory(
+                key = key,
+                ownerKey = ownerKey,
+                hardRemove = hardRemove,
+            )
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.example.testapppattern
 
 import android.app.Application
-import com.example.testapppattern.core.di.feature.FeatureKeys
+import com.example.testapppattern.core.di.feature.FeatureKey
 import com.example.testapppattern.core.di.feature.FeatureServiceLocator
 import com.example.testapppattern.core.navigation.AppFeatureNavGraph
 import com.example.testapppattern.di.DaggerAppComponent
@@ -27,16 +27,16 @@ class TestAppPatternApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        FeatureServiceLocator.registerFactoryCreator(FeatureKeys.MAIN) {
+        FeatureServiceLocator.registerFactoryCreator(FeatureKey.MAIN) {
             MainIFeatureComponentFactory(
                 appContext = this,
-                featureKey = FeatureKeys.MAIN,
+                featureKey = FeatureKey.MAIN,
                 featureServiceLocator = FeatureServiceLocator
             )
         }
-        FeatureServiceLocator.registerFactoryCreator(FeatureKeys.SETTINGS) {
+        FeatureServiceLocator.registerFactoryCreator(FeatureKey.SETTINGS) {
             SettingsIFeatureComponentFactory(
-                featureKey = FeatureKeys.SETTINGS,
+                featureKey = FeatureKey.SETTINGS,
                 featureServiceLocator = FeatureServiceLocator,
                 appDependencies = appComponent,
             )

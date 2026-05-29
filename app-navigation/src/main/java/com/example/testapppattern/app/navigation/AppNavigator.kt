@@ -1,6 +1,5 @@
 package com.example.testapppattern.app.navigation
 
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.example.testapppattern.core.navigation.AppNavigator
 
@@ -51,10 +50,14 @@ internal class ComposeAppNavigator(
 
     override fun replaceRoot(route: String) {
         navController.navigate(route) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                inclusive = true
+            // Keep only root graph entry so previous feature graph entry is removed.
+            // This guarantees ViewModelStore cleanup and onCleared() on tab switch.
+            popUpTo(navController.graph.id) {
+                inclusive = false
+                saveState = false
             }
             launchSingleTop = true
+            restoreState = false
         }
     }
 }

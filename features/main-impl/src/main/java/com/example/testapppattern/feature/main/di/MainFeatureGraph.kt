@@ -2,13 +2,14 @@ package com.example.testapppattern.feature.main.di
 
 import android.content.Context
 import com.example.testapppattern.core.di.ApplicationContext
+import com.example.testapppattern.core.di.feature.FeatureFactoriesLocator
+import com.example.testapppattern.core.di.feature.FeatureInstanceOwnerKey
 import com.example.testapppattern.core.di.scope.FeatureScope
 import com.example.testapppattern.feature.main.HomeViewModel
 import com.example.testapppattern.feature.main.api.MainFeatureDependencies
 import com.example.testapppattern.feature.main.domain.usecase.GetMainScreenViewsCountUseCase
 import com.example.testapppattern.feature.main.domain.usecase.RecordMainScreenViewUseCase
 import com.example.testapppattern.feature.main.domain.usecase.ResetMainScreenViewsCountUseCase
-import com.example.testapppattern.core.di.feature.FeatureFactoriesLocator
 import dagger.BindsInstance
 import dagger.Component
 
@@ -16,7 +17,7 @@ import dagger.Component
 @Component(
     modules = [
         MainFeatureBindingsModule::class,
-        MainSettingsBridgeModule::class,
+        MainFeatureDependenciesModule::class,
     ],
 )
 interface MainFeatureGraph : MainFeatureDependencies {
@@ -34,7 +35,10 @@ interface MainFeatureGraph : MainFeatureDependencies {
         fun applicationContext(@ApplicationContext context: Context): Builder
 
         @BindsInstance
-        fun featureFactoriesLocator(locator: FeatureFactoriesLocator): Builder
+        fun featureFactoriesLocator(featureFactoriesLocator: FeatureFactoriesLocator): Builder
+
+        @BindsInstance
+        fun featureOwnerKey(featureOwnerKey: FeatureInstanceOwnerKey): Builder
 
         fun build(): MainFeatureGraph
     }
