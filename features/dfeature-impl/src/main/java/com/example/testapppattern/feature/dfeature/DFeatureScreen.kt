@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,6 +36,10 @@ internal fun DFeatureScreen(
     }
     val viewModel: DFeatureViewModel = viewModel(factory = vmFactory)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.onScreenShown()
+    }
 
     Scaffold(
         topBar = {
@@ -63,10 +68,7 @@ internal fun DFeatureScreen(
                 textAlign = TextAlign.Center,
             )
             Text(
-                text = stringResource(
-                    R.string.d_feature_main_visit_count,
-                    uiState.mainScreenViewsCount,
-                ),
+                text = stringResource(R.string.d_feature_views_count, uiState.viewsCount),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(top = 16.dp),

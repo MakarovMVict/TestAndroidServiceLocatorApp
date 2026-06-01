@@ -47,8 +47,6 @@ class TestAppPatternApplication : Application() {
         FeatureServiceLocator.registerFactoryCreator(FeatureKey.DFEATURE) {
             DFeatureIFeatureComponentFactory(
                 featureKey = FeatureKey.DFEATURE,
-                featureServiceLocator = FeatureServiceLocator,
-                appDependencies = appComponent,
             )
         }
     }

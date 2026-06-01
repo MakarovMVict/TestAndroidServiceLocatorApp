@@ -1,22 +1,16 @@
 package com.example.testapppattern.feature.dfeature.di
 
-import com.example.testapppattern.core.di.app.AppDependencies
-import com.example.testapppattern.core.di.feature.FeatureFactoriesLocator
 import com.example.testapppattern.core.di.feature.FeatureInstanceOwnerKey
 import com.example.testapppattern.core.di.feature.FeatureKey
 import com.example.testapppattern.core.di.feature.IFeatureComponentFactory
-import com.example.testapppattern.feature.main.api.MainFeatureDependencies
 import java.lang.ref.WeakReference
 import java.util.concurrent.ConcurrentHashMap
 
 class DFeatureIFeatureComponentFactory(
     private val featureKey: FeatureKey,
-    private val featureServiceLocator: FeatureFactoriesLocator,
-    private val appDependencies: AppDependencies,
 ) : IFeatureComponentFactory<DFeatureComponent> {
 
-    override val dependenciesKeysList: Set<FeatureKey> =
-        ConcurrentHashMap.newKeySet<FeatureKey>().apply { add(FeatureKey.MAIN) }
+    override val dependenciesKeysList: Set<FeatureKey> = emptySet()
     private val featureOwners: MutableSet<FeatureInstanceOwnerKey> = ConcurrentHashMap.newKeySet()
 
     private var weakComponentRef: WeakReference<DFeatureComponent>? = null
@@ -28,10 +22,6 @@ class DFeatureIFeatureComponentFactory(
             featureOwners.add(ownerKey)
         }
 
-        val mainDependencies =
-            featureServiceLocator.getFactory(FeatureKey.MAIN)
-                .getComponent(ownerKey = ownerKey) as MainFeatureDependencies
-
         strongComponentRef?.let {
             return it
         }
@@ -40,10 +30,7 @@ class DFeatureIFeatureComponentFactory(
             return cached
         }
 
-        val builtComponent = DaggerDFeatureComponent.builder()
-            .appDependencies(appDependencies)
-            .mainFeatureDependencies(mainDependencies)
-            .build()
+        val builtComponent = DaggerDFeatureComponent.create()
 
         if (weakComponentRef?.get() == null) {
             weakComponentRef = WeakReference(builtComponent)
@@ -64,7 +51,6 @@ class DFeatureIFeatureComponentFactory(
         if (featureOwners.remove(ownerKey).not()) {
             return
         }
-        val dependencies = dependenciesKeysList.toList()
         val shouldClear = featureOwners.isEmpty()
         if (shouldClear) {
             strongComponentRef = null
@@ -73,12 +59,5 @@ class DFeatureIFeatureComponentFactory(
             }
         }
 
-        for (key in dependencies) {
-            featureServiceLocator.removeFactory(
-                key = key,
-                ownerKey = ownerKey,
-                hardRemove = hardRemove,
-            )
-        }
     }
 }

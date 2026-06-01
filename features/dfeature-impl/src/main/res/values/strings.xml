@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="d_feature_title">DFeature</string>
-    <string name="d_feature_subtitle">Экран новой фичи по аналогии с Settings</string>
-    <string name="d_feature_main_visit_count">Показов главного экрана: %d</string>
+    <string name="d_feature_subtitle">Счетчик показов экрана хранится в памяти фичи</string>
+    <string name="d_feature_views_count">Показов экрана DFeature: %d</string>
     <string name="d_feature_back">Назад</string>
 </resources>

@@ -2,7 +2,7 @@ package com.example.testapppattern.feature.dfeature
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.testapppattern.feature.main.domain.usecase.GetMainScreenViewsCountUseCase
+import com.example.testapppattern.feature.dfeature.domain.repository.IDFeatureScreenViewsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,24 +11,20 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class DFeatureUiState(
-    val mainScreenViewsCount: Int = 0,
+    val viewsCount: Int = 0,
 )
 
 class DFeatureViewModel @Inject constructor(
-    private val getMainScreenViewsCountUseCase: GetMainScreenViewsCountUseCase,
+    private val repository: IDFeatureScreenViewsRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DFeatureUiState())
     val uiState: StateFlow<DFeatureUiState> = _uiState.asStateFlow()
 
-    init {
-        refresh()
-    }
-
-    fun refresh() {
+    fun onScreenShown() {
         viewModelScope.launch {
-            val count = getMainScreenViewsCountUseCase()
-            _uiState.update { it.copy(mainScreenViewsCount = count) }
+            val updatedCount = repository.incrementAndGet()
+            _uiState.update { it.copy(viewsCount = updatedCount) }
         }
     }
 }

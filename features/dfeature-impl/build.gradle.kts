@@ -27,7 +27,6 @@ android {
 
 dependencies {
     implementation(project(":core:core-navigation"))
-    implementation(project(":features:main-api"))
     implementation(project(":features:dfeature-api"))
     implementation(project(":core:core-di"))
     implementation(project(":base-component-lifecycle"))
