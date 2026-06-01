@@ -48,10 +48,12 @@ dependencies {
     implementation(project(":features:main-api"))
     implementation(project(":features:payments-api"))
     implementation(project(":features:settings-api"))
+    implementation(project(":features:dfeature-api"))
 
     implementation(project(":features:main-impl"))
     implementation(project(":features:payments-impl"))
     implementation(project(":features:settings-impl"))
+    implementation(project(":features:dfeature-impl"))
 
     implementation(libs.dagger)
     kapt(libs.dagger.compiler)

@@ -4,4 +4,5 @@ enum class FeatureKey {
     MAIN,
     SETTINGS,
     PAYMENTS,
+    DFEATURE,
 }

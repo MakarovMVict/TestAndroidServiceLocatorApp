@@ -26,6 +26,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testapppattern.core.navigation.LocalAppNavigator
 import com.example.testapppattern.core.ui.viewmodel.FunctionViewModelFactory
+import com.example.testapppattern.feature.dfeature.api.navigation.DFeatureRoutes
 import com.example.testapppattern.feature.settings.api.navigation.SettingsRoutes
 import com.example.testapppattern.feature.settings.graph.SettingsGraphHolderViewModel
 
@@ -110,6 +111,14 @@ internal fun SettingsScreen(
                 .padding(top = 24.dp),
         ) {
             Text(text = stringResource(R.string.settings_button_parameters))
+        }
+        Button(
+            onClick = { navigator.navTo(DFeatureRoutes.GRAPH, singleTop = false) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp),
+        ) {
+            Text(text = stringResource(R.string.settings_button_d_feature))
         }
     }
 }

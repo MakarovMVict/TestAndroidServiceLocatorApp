@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.testapppattern.feature.settings"
+    namespace = "com.example.testapppattern.feature.dfeature"
     compileSdk = 35
 
     defaultConfig {
@@ -27,9 +27,8 @@ android {
 
 dependencies {
     implementation(project(":core:core-navigation"))
-    implementation(project(":features:dfeature-api"))
     implementation(project(":features:main-api"))
-    implementation(project(":features:settings-api"))
+    implementation(project(":features:dfeature-api"))
     implementation(project(":core:core-di"))
     implementation(project(":base-component-lifecycle"))
     implementation(project(":core:core-ui"))
